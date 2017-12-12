@@ -1,2 +1,3 @@
-{% load status_format %}
+{% load status_format humanize %}
 {{ onlinestatus.status|status_format:"text" }}
+{{onelinestatus.seen}}

@@ -8,17 +8,17 @@ register = template.Library()
 def status_format(val, arg="text"):
     if arg == "text":
         if val == 1:
-            return _('online')
+            return _('Online')
         elif val == 0:
-            return _('idle')
+            return _('Idle')
         else:
-            return _('offline')
+            return _('Offline')
     elif arg == "tag":
         if val == 1:
-            return 'online'
+            return 'Online'
         elif val == 0:
-            return 'idle'
+            return 'Idle'
         else:
-            return 'offline'
+            return 'Offline'
     else:
         return val

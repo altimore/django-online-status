@@ -1,12 +1,23 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from django.utils import timezone
+
 from django.core.cache import cache
+from django.utils import timezone
 from online_status.conf import online_status_settings as config
 
 
 class OnlineStatus(object):
     """Online status data which will be later cached"""
+    STATUS = (
+        (0, "idle"),
+        (1, "active"),
+    )
+
+    # user = models.ForeignKey(User)
+    # status = models.ChoicesField(choices=STATUS)
+    # seen = models.DateTimeField()
+    # ip = models.CharField()
+    # session = models.CharField()
 
     def __init__(self, request):
         self.user = request.user
@@ -27,10 +38,17 @@ class OnlineStatus(object):
         # Can change if operating from multiple browsers
         self.ip = request.META['REMOTE_ADDR']
 
+    def __repr__(self):
+
+        return "%s, %s, %s" % (self.status, self.seen, self.ip)
+
+        # return "%s, %s, %s, %s, %s" % (self.user, self.status, self.seen,
+        #                                self.ip, self.session)
+
 
 def refresh_user(request):
     """Sets or updates user's online status"""
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         key = config.CACHE_PREFIX_USER % request.user.pk
     elif not config.ONLY_LOGGED_USERS:
         key = config.CACHE_PREFIX_ANONYM_USER % request.session.session_key
@@ -76,7 +94,7 @@ def refresh_users_list(request, **kwargs):
 
         online_users.append(online_status)
 
-    if updated.user.is_authenticated():
+    if updated.user.is_authenticated:
         online_users.append(updated)
 
     cache.set(config.CACHE_USERS, online_users, config.TIME_OFFLINE)
@@ -84,7 +102,7 @@ def refresh_users_list(request, **kwargs):
 
 def status_for_user(user):
     """Return status for user, duh?"""
-    if user.is_authenticated():
+    if user.is_authenticated:
         key = config.CACHE_PREFIX_USER % user.pk
         return cache.get(key)
     return None
