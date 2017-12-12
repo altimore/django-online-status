@@ -48,13 +48,13 @@ def online_users(limit=None):
     }
 
 
-# @register.inclusion_tag('online_status/user_status.html')
-# def user_status(user):
-#     """Renders an OnlineStatus instance for User"""
-#     status = status_for_user(user)
-#     return {
-#         'onlinestatus': status,
-#     }
+@register.inclusion_tag('online_status/user_status.html')
+def user_status(user):
+    """Renders an OnlineStatus instance for User"""
+    status = status_for_user(user)
+    return {
+        'onlinestatus': status,
+    }
 
 
 @register.inclusion_tag('online_status/user_status_tag.html')
@@ -66,5 +66,5 @@ def user_status_tag(user):
 
 
 @register.simple_tag()
-def user_status(user):
+def get_status(user):
     return status_for_user(user) or "Offline"
